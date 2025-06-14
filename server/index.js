@@ -8,7 +8,7 @@ const app = express();
 const port = 4000; 
 // Middleware 
 app.use(cors({ 
-origin: 'http://localhost:3000', 
+origin: 'http://localhost:3000', // ganti ke port frontend
 credentials: true 
 })); 
 app.use(cookieParser()); 

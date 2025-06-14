@@ -1,12 +1,23 @@
-import React, { useState } from 'react'; 
+import React, { useState, useEffect } from 'react'; 
 import DOMPurify from 'dompurify'; 
 import axios from 'axios'; 
 function App() { 
 const [input, setInput] = useState(""); 
-const [htmlOutput, setHtmlOutput] = useState(""); 
+const [csrfToken, setCsrfToken] = useState(""); 
+useEffect(() => { 
+// Ambil CSRF token saat komponen dimount 
+axios.get("http://localhost:4000/api/csrf-token", { withCredentials: true }) 
+.then(res => setCsrfToken(res.data.csrfToken)); 
+}, []); 
 const handleSubmit = async () => { 
-const res = await axios.post("http://localhost:4000/api/data", { input }, { 
-withCredentials: true }); 
+const res = await axios.post( 
+"http://localhost:4000/api/data", 
+{ input }, 
+{ 
+withCredentials: true, 
+headers: { 'XSRF-TOKEN': csrfToken } 
+} 
+); 
 alert(res.data.message); 
 }; 
 return ( 
